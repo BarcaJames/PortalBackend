@@ -3,15 +3,13 @@ package com.portal.service.impl;
 import com.portal.domain.User;
 import com.portal.domain.UserPrincipal;
 import com.portal.enumeration.Role;
-import com.portal.exception.domain.EmailExistException;
-import com.portal.exception.domain.EmailNotFoundException;
-import com.portal.exception.domain.UserNotFoundException;
-import com.portal.exception.domain.UsernameExistException;
+import com.portal.exception.domain.*;
 import com.portal.repository.UserRepository;
 import com.portal.service.EmailService;
 import com.portal.service.LoginAttemptService;
 import com.portal.service.UserService;
 import net.bytebuddy.utility.RandomString;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,17 +24,20 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.mail.MessagingException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static com.portal.constant.FileConstant.*;
 import static com.portal.constant.UserImplServiceConstant.*;
 import static com.portal.enumeration.Role.ROLE_USER;
+import static org.springframework.http.MediaType.*;
 
 @Service
 @Transactional //Manage propagation
@@ -142,7 +143,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User addNewUser(String firstName, String lastname, String username,
                            String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage
-    ) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException {
+    ) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException, NotAnImageFileException {
         validateNewUsernameAndEmail("", username, email);
         User user = new User();
         String password = generatePassword();
@@ -166,7 +167,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User updateUser(String currentUsername, String newFirstName, String newLastname, String newUsername,
                            String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage)
-            throws UserNotFoundException, EmailExistException, UsernameExistException, IOException {
+            throws UserNotFoundException, EmailExistException, UsernameExistException, IOException, NotAnImageFileException {
         User currentUser = validateNewUsernameAndEmail(currentUsername, newUsername, newEmail);
         currentUser.setFirstName(newFirstName);
         currentUser.setLastName(newLastname);
@@ -200,15 +201,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User updateProfileImage(String username, MultipartFile profileImage) throws
-            UserNotFoundException, EmailExistException, UsernameExistException, IOException {
+            UserNotFoundException, EmailExistException, UsernameExistException, IOException, NotAnImageFileException {
 
         User user = validateNewUsernameAndEmail(username, null, null);
         saveProfileImage(user, profileImage);
         return user;
     }
 
-    private void saveProfileImage(User user, MultipartFile profileImage) throws IOException {
+    private void saveProfileImage(User user, MultipartFile profileImage) throws IOException, NotAnImageFileException {
         if(profileImage != null){
+            if(!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType())){
+                throw new NotAnImageFileException(
+                        profileImage.getOriginalFilename() + " is not an image file! Please upload an image!"
+                );
+            }
             //find location of user folder ie /Users/Jamie/PortalApi/user/{username}
             Path userFolder = Paths.get(USER_FOLDER + user.getUsername()).toAbsolutePath().normalize();
             if(!Files.exists(userFolder)){

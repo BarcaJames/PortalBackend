@@ -41,7 +41,6 @@ public class ExceptionHandling implements ErrorController {
     public static final String ERROR_PATH = "/error";
 
 
-
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<HttpResponse> accountDisabledException(){
         return createHttpResponse(BAD_REQUEST, ACCOUNT_DISABLED);
@@ -60,6 +59,11 @@ public class ExceptionHandling implements ErrorController {
     @ExceptionHandler(LockedException.class)
     public ResponseEntity<HttpResponse> lockedException() {
         return createHttpResponse(UNAUTHORIZED, ACCOUNT_LOCKED);
+    }
+
+    @ExceptionHandler(NotAnImageFileException.class)
+    public ResponseEntity<HttpResponse> notAnImageFileException(NotAnImageFileException exception){
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 
     @ExceptionHandler(TokenExpiredException.class)

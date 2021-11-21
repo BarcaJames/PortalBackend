@@ -70,7 +70,7 @@ public class UserResource extends ExceptionHandling {
                                            @RequestParam("isActive") String isActive,
                                            @RequestParam("isNonLocked") String isNonLocked,
                                            @RequestParam(value = "profileImage", required = false) MultipartFile profileImage)
-            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
+            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException, MessagingException, NotAnImageFileException {
 
         User newUser = userService.addNewUser(firstName, lastName, username, email, role,
                 Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
@@ -88,7 +88,7 @@ public class UserResource extends ExceptionHandling {
                                        @RequestParam("isActive") String isActive,
                                        @RequestParam("isNonLocked") String isNonLocked,
                                        @RequestParam(value = "profileImage", required = false) MultipartFile profileImage)
-            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
+            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException, NotAnImageFileException {
 
         User updatedUser = userService.updateUser(currentUsername,firstName, lastName, username, email, role,
                 Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
@@ -122,7 +122,7 @@ public class UserResource extends ExceptionHandling {
     @PostMapping("/update-profile-Image")
     public ResponseEntity<User> updateProfileImage(@RequestParam("username") String username,
                                        @RequestParam(value = "profileImage") MultipartFile profileImage)
-            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
+            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException, NotAnImageFileException {
 
         User updatedUser = userService.updateProfileImage(username, profileImage);
 

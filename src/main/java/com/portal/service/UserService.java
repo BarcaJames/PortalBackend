@@ -1,10 +1,7 @@
 package com.portal.service;
 
 import com.portal.domain.User;
-import com.portal.exception.domain.EmailExistException;
-import com.portal.exception.domain.EmailNotFoundException;
-import com.portal.exception.domain.UserNotFoundException;
-import com.portal.exception.domain.UsernameExistException;
+import com.portal.exception.domain.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
@@ -21,15 +18,15 @@ public interface UserService {
     /*This is used to add a user in the system when you are already in the system*/
     User addNewUser(String firstName, String lastname, String username, String email,
                     String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage
-    ) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException;
+    ) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException, MessagingException, NotAnImageFileException;
 
     User updateUser(String currentUsername, String newFirstName, String newLastname, String newUsername, String newEmail,
                     String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage
-    ) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException;
+    ) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException, NotAnImageFileException;
 
-    void deleteUser(long id);
+    void deleteUser(String username) throws IOException;
 
     void resetPassword(String email) throws EmailNotFoundException, MessagingException;
 
-    User updateProfileImage(String username, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException;
+    User updateProfileImage(String username, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException, NotAnImageFileException;
 }
