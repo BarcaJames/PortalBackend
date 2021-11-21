@@ -112,10 +112,10 @@ public class UserResource extends ExceptionHandling {
         return response(HttpStatus.OK, EMAIL_SENT + email);
     }
 
-    @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAnyAuthority('user:delete')")
-    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("id") long id){
-        userService.deleteUser(id);
+    @DeleteMapping("/delete/{username}")
+//    @PreAuthorize("hasAnyAuthority('user:delete')")
+    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) throws IOException {
+        userService.deleteUser(username);
         return response(HttpStatus.NO_CONTENT, USER_DELETED_SUCCESSFULLY);
     }
 

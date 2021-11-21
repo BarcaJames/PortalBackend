@@ -161,6 +161,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setProfileImageUrl(getTemporaryProfileImageUrl(username));
         userRepository.save(user);
         saveProfileImage(user, profileImage);
+//        emailService.sendNewPasswordEmail(firstName, password, email);
         return user;
     }
 
@@ -183,8 +184,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void deleteUser(long id) {
-        userRepository.deleteById(id);
+    public void deleteUser(String username) throws IOException {
+        User user = userRepository.findUserByUsername(username);
+        Path userFolder = Paths.get(USER_FOLDER + user.getUsername()).toAbsolutePath().normalize();
+        FileUtils.deleteDirectory(new File(userFolder.toString()));
+        userRepository.deleteById(user.getId());
     }
 
     @Override
