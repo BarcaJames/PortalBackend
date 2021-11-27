@@ -30,8 +30,6 @@ public class PortalApiApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(PortalApiApplication.class, args);
-        // Add folder to user home on whatever server this is running on
-        new File(USER_FOLDER).mkdirs();
     }
 
     @Bean
@@ -52,7 +50,6 @@ public class PortalApiApplication {
                 user.setActive(true);
                 user.setNotLocked(true);
                 user.setPassword(bCryptPasswordEncoder().encode(superAdminPassword));
-                user.setProfileImageUrl("http://localhost:8080/user/image/profile/Jamie");
                 user.setAuthorities(ROLE_SUPER_ADMIN.getAuthorities());
                 repo.save(user);
             }

@@ -27,7 +27,9 @@ public class User implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String email;
-    private String profileImageUrl;
+    @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
+    private byte[] profileImage;
     private Date lastLoginDate;
     private Date lastLoginDateDisplay;
     private Date joinDate;
