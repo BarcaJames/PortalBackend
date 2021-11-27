@@ -18,13 +18,13 @@ public interface UserService {
     /*This is used to add a user in the system when you are already in the system*/
     User addNewUser(String firstName, String lastname, String username, String email,
                     String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage
-    ) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException, MessagingException, NotAnImageFileException;
+    ) throws UserNotFoundException, EmailExistException, UsernameExistException, MessagingException, NotAnImageFileException, IOException;
 
     User updateUser(String currentUsername, String newFirstName, String newLastname, String newUsername, String newEmail,
                     String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage
-    ) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException, NotAnImageFileException;
+    ) throws UserNotFoundException, EmailExistException, UsernameExistException, NotAnImageFileException, IOException;
 
-    void deleteUser(String username) throws IOException;
+    void deleteUser(String username);
 
     void resetPassword(String email) throws EmailNotFoundException, MessagingException;
 

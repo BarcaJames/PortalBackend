@@ -24,6 +24,7 @@ public class ScheduleConfiguration {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+//    @Scheduled(cron = "0 43 20 * * *", zone = "GMT-5")
     @Scheduled(cron = "0 0 0 * * *", zone = "GMT-5")
     public void cleanUp(){
         userRepository.deleteAll();
@@ -48,7 +49,6 @@ public class ScheduleConfiguration {
         user.setActive(true);
         user.setNotLocked(true);
         user.setPassword(bCryptPasswordEncoder.encode("password"));
-        user.setProfileImageUrl("http://localhost:8080/user/image/profile/"+ username);
         user.setAuthorities(role.getAuthorities());
 
         return user;

@@ -9,7 +9,6 @@ import com.portal.utility.JWTTokenProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -70,7 +69,7 @@ public class UserResource extends ExceptionHandling {
                                            @RequestParam("isActive") String isActive,
                                            @RequestParam("isNonLocked") String isNonLocked,
                                            @RequestParam(value = "profileImage", required = false) MultipartFile profileImage)
-            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException, MessagingException, NotAnImageFileException {
+            throws UserNotFoundException, EmailExistException, UsernameExistException, MessagingException, NotAnImageFileException, IOException {
 
         User newUser = userService.addNewUser(firstName, lastName, username, email, role,
                 Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
@@ -88,7 +87,7 @@ public class UserResource extends ExceptionHandling {
                                        @RequestParam("isActive") String isActive,
                                        @RequestParam("isNonLocked") String isNonLocked,
                                        @RequestParam(value = "profileImage", required = false) MultipartFile profileImage)
-            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException, NotAnImageFileException {
+            throws UserNotFoundException, EmailExistException, UsernameExistException, NotAnImageFileException, IOException {
 
         User updatedUser = userService.updateUser(currentUsername,firstName, lastName, username, email, role,
                 Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
@@ -114,7 +113,7 @@ public class UserResource extends ExceptionHandling {
 
     @DeleteMapping("/delete/{username}")
 //    @PreAuthorize("hasAnyAuthority('user:delete')")
-    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) throws IOException {
+    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) {
         userService.deleteUser(username);
         return response(HttpStatus.NO_CONTENT, USER_DELETED_SUCCESSFULLY);
     }
@@ -129,12 +128,22 @@ public class UserResource extends ExceptionHandling {
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
+    /**
+     * @deprecated
+     * This method should not be used since we no longer add pictures to the fie system
+     * but instead send them to the database as blobs*/
+    @Deprecated
     // Get user image from file system
     @GetMapping(path = "/image/{username}/{fileName}", produces = IMAGE_JPEG_VALUE)
     public byte[] getProfileImage(@PathVariable String fileName, @PathVariable String username) throws IOException {
         return Files.readAllBytes(Paths.get(USER_FOLDER + username + FORWARD_SLASH + fileName));
     }
 
+    /**
+     * @deprecated
+     * This method should not be used since we no longer add pictures to the fie system
+     * but instead send them to the database as blobs*/
+    @Deprecated
     //Responsible for getting the avatar from TEMP_PROFILE_IMAGE_BASE_URL
     @GetMapping(path = "/image/profile/{username}", produces = IMAGE_JPEG_VALUE)
     public byte[] getTempProfileImage( @PathVariable String username) throws IOException {
