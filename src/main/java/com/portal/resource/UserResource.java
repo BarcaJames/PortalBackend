@@ -9,6 +9,7 @@ import com.portal.utility.JWTTokenProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +61,7 @@ public class UserResource extends ExceptionHandling {
        return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('user:update')")
     @PostMapping("/add")
     public ResponseEntity<User> addNewUser(@RequestParam("firstName") String firstName,
                                            @RequestParam("lastName") String lastName,
@@ -77,6 +79,7 @@ public class UserResource extends ExceptionHandling {
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyAuthority('user:update')")
     @PostMapping("/update")
     public ResponseEntity<User> update(@RequestParam("currentUsername") String currentUsername,
                                        @RequestParam("firstName") String firstName,
@@ -105,6 +108,7 @@ public class UserResource extends ExceptionHandling {
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('user:create')")
     @PostMapping("reset-password/{email}")
     public ResponseEntity<HttpResponse> resetPassword(@PathVariable("email") String email) throws EmailNotFoundException, MessagingException {
         userService.resetPassword(email);
@@ -112,7 +116,7 @@ public class UserResource extends ExceptionHandling {
     }
 
     @DeleteMapping("/delete/{username}")
-//    @PreAuthorize("hasAnyAuthority('user:delete')")
+    @PreAuthorize("hasAnyAuthority('user:delete')")
     public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) {
         userService.deleteUser(username);
         return response(HttpStatus.NO_CONTENT, USER_DELETED_SUCCESSFULLY);
