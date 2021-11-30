@@ -25,9 +25,6 @@ import static com.portal.enumeration.Role.ROLE_SUPER_ADMIN;
 
 public class PortalApiApplication {
 
-    @Value("${SuperAdmin.password}")
-    private String superAdminPassword;
-
     public static void main(String[] args) {
         SpringApplication.run(PortalApiApplication.class, args);
     }
@@ -49,7 +46,7 @@ public class PortalApiApplication {
                 user.setJoinDate(new Date());
                 user.setActive(true);
                 user.setNotLocked(true);
-                user.setPassword(bCryptPasswordEncoder().encode(superAdminPassword));
+                user.setPassword(bCryptPasswordEncoder().encode("password"));
                 user.setAuthorities(ROLE_SUPER_ADMIN.getAuthorities());
                 repo.save(user);
             }
