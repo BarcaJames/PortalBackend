@@ -1,6 +1,5 @@
 package com.portal.listener;
 
-import com.portal.domain.User;
 import com.portal.domain.UserPrincipal;
 import com.portal.service.LoginAttemptService;
 import org.springframework.context.event.EventListener;

@@ -1,6 +1,6 @@
 package com.portal.service.impl;
 
-import com.portal.domain.User;
+import com.portal.domain.Users;
 import com.portal.domain.UserPrincipal;
 import com.portal.enumeration.Role;
 import com.portal.exception.domain.*;
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUsername(username);
+        Users user = userRepository.findUserByUsername(username);
         if(user == null){
             LOGGER.error(NO_USER_FOUND_BY_USERNAME + username);
             throw new UsernameNotFoundException(NO_USER_FOUND_BY_USERNAME + username);
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    private void validateLoginAttempt(User user) {
+    private void validateLoginAttempt(Users user) {
         if(user.isNotLocked()){
             /// If account is not locked, check if user exceed attempt
             if(loginAttemptService.hasExceededMaxAttempts(user.getUsername())){
@@ -97,10 +97,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User register(String firstName, String lastname, String username, String email) throws
+    public Users register(String firstName, String lastname, String username, String email) throws
             UserNotFoundException, EmailExistException, UsernameExistException, MessagingException {
         validateNewUsernameAndEmail("", username, email);
-        User user = new User();
+        Users user = new Users();
         user.setUserId(generateUserId());
         String password = generatePassword();
         user.setFirstName(firstName);
@@ -119,26 +119,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<Users> getUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public User findByUsername(String username) {
+    public Users findByUsername(String username) {
         return userRepository.findUserByUsername(username);
     }
 
     @Override
-    public User findByEmail(String email) {
+    public Users findByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
 
     @Override
-    public User addNewUser(String firstName, String lastname, String username,
-                           String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage
+    public Users addNewUser(String firstName, String lastname, String username,
+                            String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage
     ) throws UserNotFoundException, EmailExistException, UsernameExistException, NotAnImageFileException, IOException {
         validateNewUsernameAndEmail("", username, email);
-        User user = new User();
+        Users user = new Users();
         String password = generatePassword();
         user.setUserId(generateUserId());
         user.setFirstName(firstName);
@@ -158,10 +158,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User updateUser(String currentUsername, String newFirstName, String newLastname, String newUsername,
-                           String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage)
+    public Users updateUser(String currentUsername, String newFirstName, String newLastname, String newUsername,
+                            String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage)
             throws UserNotFoundException, EmailExistException, UsernameExistException, NotAnImageFileException, IOException {
-        User currentUser = validateNewUsernameAndEmail(currentUsername, newUsername, newEmail);
+        Users currentUser = validateNewUsernameAndEmail(currentUsername, newUsername, newEmail);
         currentUser.setFirstName(newFirstName);
         currentUser.setLastName(newLastname);
         currentUser.setUsername(newUsername);
@@ -177,13 +177,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void deleteUser(String username){
-        User user = userRepository.findUserByUsername(username);
+        Users user = userRepository.findUserByUsername(username);
         userRepository.deleteById(user.getId());
     }
 
     @Override
     public void resetPassword(String email) throws EmailNotFoundException, MessagingException {
-        User user = userRepository.findUserByEmail(email);
+        Users user = userRepository.findUserByEmail(email);
         if(user == null){
             throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
         }
@@ -194,15 +194,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User updateProfileImage(String username, MultipartFile profileImage) throws
+    public Users updateProfileImage(String username, MultipartFile profileImage) throws
             UserNotFoundException, EmailExistException, UsernameExistException, IOException, NotAnImageFileException {
 
-        User user = validateNewUsernameAndEmail(username, null, null);
+        Users user = validateNewUsernameAndEmail(username, null, null);
         saveProfileImage(user, profileImage);
         return user;
     }
 
-    private void saveProfileImage(User user, MultipartFile profileImage) throws NotAnImageFileException, IOException {
+    private void saveProfileImage(Users user, MultipartFile profileImage) throws NotAnImageFileException, IOException {
         if(profileImage != null){
             if(!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType())){
                 throw new NotAnImageFileException(
@@ -250,15 +250,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      *                        This will be null when user is creating account.
      * */
 
-    private User validateNewUsernameAndEmail(String currentUsername, String newUsername, String newEmail) throws
+    private Users validateNewUsernameAndEmail(String currentUsername, String newUsername, String newEmail) throws
             UserNotFoundException, UsernameExistException, EmailExistException
     {
-        User userByNewUsername = findByUsername(newUsername);
-        User userByNewEmail = findByEmail(newEmail);
+        Users userByNewUsername = findByUsername(newUsername);
+        Users userByNewEmail = findByEmail(newEmail);
 
         // Check if currentUsername is blank
         if(StringUtils.hasText(currentUsername)){
-            User currentUser = findByUsername(currentUsername);
+            Users currentUser = findByUsername(currentUsername);
             if(currentUser == null){
                 throw new UserNotFoundException(NO_USER_FOUND_BY_USERNAME + currentUsername);
             }

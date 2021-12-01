@@ -1,11 +1,11 @@
 package com.portal.repository;
 
-import com.portal.domain.User;
+import com.portal.domain.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<Users, Long> {
 
-    User findUserByUsername(String username);
+    Users findUserByUsername(String username);
 
-    User findUserByEmail(String email);
+    Users findUserByEmail(String email);
 }

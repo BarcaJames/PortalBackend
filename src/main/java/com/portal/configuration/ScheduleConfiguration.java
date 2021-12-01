@@ -1,6 +1,6 @@
 package com.portal.configuration;
 
-import com.portal.domain.User;
+import com.portal.domain.Users;
 import com.portal.enumeration.Role;
 import com.portal.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -37,8 +37,8 @@ public class ScheduleConfiguration {
 
     }
 
-    private User buildUser(String firstName, String lastName, String username, Role role){
-        User user = new User();
+    private Users buildUser(String firstName, String lastName, String username, Role role){
+        Users user = new Users();
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setUsername(username);

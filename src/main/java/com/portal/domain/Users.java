@@ -1,6 +1,5 @@
 package com.portal.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -14,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User implements Serializable {
+public class Users implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
@@ -28,7 +27,6 @@ public class User implements Serializable {
     private String password;
     private String email;
     @Lob
-    @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] profileImage;
     private Date lastLoginDate;
     private Date lastLoginDateDisplay;

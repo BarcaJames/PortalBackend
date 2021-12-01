@@ -1,7 +1,7 @@
 package com.portal.resource;
 
 import com.portal.domain.HttpResponse;
-import com.portal.domain.User;
+import com.portal.domain.Users;
 import com.portal.domain.UserPrincipal;
 import com.portal.exception.domain.*;
 import com.portal.service.UserService;
@@ -46,34 +46,34 @@ public class UserResource extends ExceptionHandling {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User user) {
+    public ResponseEntity<Users> login(@RequestBody Users user) {
         authenticate(user.getUsername(), user.getPassword());
-        User loginUser = userService.findByUsername(user.getUsername());
+        Users loginUser = userService.findByUsername(user.getUsername());
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
         HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
         return new ResponseEntity<>(loginUser,jwtHeader, HttpStatus.OK);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) throws
+    public ResponseEntity<Users> register(@RequestBody Users user) throws
             UserNotFoundException, EmailExistException, UsernameExistException, MessagingException {
-       User newUser =  userService.register(user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail());
+       Users newUser =  userService.register(user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail());
        return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('user:update')")
     @PostMapping("/add")
-    public ResponseEntity<User> addNewUser(@RequestParam("firstName") String firstName,
-                                           @RequestParam("lastName") String lastName,
-                                           @RequestParam("username") String username,
-                                           @RequestParam("email") String email,
-                                           @RequestParam("role") String role,
-                                           @RequestParam("isActive") String isActive,
-                                           @RequestParam("isNonLocked") String isNonLocked,
-                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage)
+    public ResponseEntity<Users> addNewUser(@RequestParam("firstName") String firstName,
+                                            @RequestParam("lastName") String lastName,
+                                            @RequestParam("username") String username,
+                                            @RequestParam("email") String email,
+                                            @RequestParam("role") String role,
+                                            @RequestParam("isActive") String isActive,
+                                            @RequestParam("isNonLocked") String isNonLocked,
+                                            @RequestParam(value = "profileImage", required = false) MultipartFile profileImage)
             throws UserNotFoundException, EmailExistException, UsernameExistException, MessagingException, NotAnImageFileException, IOException {
 
-        User newUser = userService.addNewUser(firstName, lastName, username, email, role,
+        Users newUser = userService.addNewUser(firstName, lastName, username, email, role,
                 Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
 
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
@@ -81,30 +81,30 @@ public class UserResource extends ExceptionHandling {
 
     @PreAuthorize("hasAnyAuthority('user:update')")
     @PostMapping("/update")
-    public ResponseEntity<User> update(@RequestParam("currentUsername") String currentUsername,
-                                       @RequestParam("firstName") String firstName,
-                                       @RequestParam("lastName") String lastName,
-                                       @RequestParam("username") String username,
-                                       @RequestParam("email") String email,
-                                       @RequestParam("role") String role,
-                                       @RequestParam("isActive") String isActive,
-                                       @RequestParam("isNonLocked") String isNonLocked,
-                                       @RequestParam(value = "profileImage", required = false) MultipartFile profileImage)
+    public ResponseEntity<Users> update(@RequestParam("currentUsername") String currentUsername,
+                                        @RequestParam("firstName") String firstName,
+                                        @RequestParam("lastName") String lastName,
+                                        @RequestParam("username") String username,
+                                        @RequestParam("email") String email,
+                                        @RequestParam("role") String role,
+                                        @RequestParam("isActive") String isActive,
+                                        @RequestParam("isNonLocked") String isNonLocked,
+                                        @RequestParam(value = "profileImage", required = false) MultipartFile profileImage)
             throws UserNotFoundException, EmailExistException, UsernameExistException, NotAnImageFileException, IOException {
 
-        User updatedUser = userService.updateUser(currentUsername,firstName, lastName, username, email, role,
+        Users updatedUser = userService.updateUser(currentUsername,firstName, lastName, username, email, role,
                 Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
 
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @GetMapping("/find/{username}")
-    public ResponseEntity<User> getUser(@PathVariable("username") String username){
+    public ResponseEntity<Users> getUser(@PathVariable("username") String username){
         return new ResponseEntity<>(userService.findByUsername(username), HttpStatus.OK);
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<Users>> getAllUsers(){
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 
@@ -123,11 +123,11 @@ public class UserResource extends ExceptionHandling {
     }
 
     @PostMapping("/update-profile-Image")
-    public ResponseEntity<User> updateProfileImage(@RequestParam("username") String username,
-                                       @RequestParam(value = "profileImage") MultipartFile profileImage)
+    public ResponseEntity<Users> updateProfileImage(@RequestParam("username") String username,
+                                                    @RequestParam(value = "profileImage") MultipartFile profileImage)
             throws UserNotFoundException, EmailExistException, IOException, UsernameExistException, NotAnImageFileException {
 
-        User updatedUser = userService.updateProfileImage(username, profileImage);
+        Users updatedUser = userService.updateProfileImage(username, profileImage);
 
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }

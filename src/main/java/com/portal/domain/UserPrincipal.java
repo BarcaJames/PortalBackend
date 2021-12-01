@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 public class UserPrincipal implements UserDetails {
 
     /* This is the user from the client */
-    private final User user;
+    private final Users user;
 
-    public UserPrincipal(User user) {
+    public UserPrincipal(Users user) {
         this.user = user;
     }
 

@@ -1,9 +1,8 @@
 package com.portal;
 
-import com.portal.domain.User;
+import com.portal.domain.Users;
 import com.portal.repository.UserRepository;
 import net.bytebuddy.utility.RandomString;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,12 +12,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
-import static com.portal.constant.FileConstant.USER_FOLDER;
 import static com.portal.enumeration.Role.ROLE_SUPER_ADMIN;
 
 @SpringBootApplication
@@ -33,10 +30,10 @@ public class PortalApiApplication {
     public CommandLineRunner demoData(UserRepository repo) {
 
         return args -> {
-            User user;
+            Users user;
             user = repo.findUserByUsername("Jamie");
             if(user == null) {
-                user = new User();
+                user = new Users();
                 user.setFirstName("Jamie");
                 user.setLastName("James");
                 user.setUsername("Jamie");
