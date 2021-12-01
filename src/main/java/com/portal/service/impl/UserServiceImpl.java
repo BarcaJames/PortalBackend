@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users user = userRepository.findUserByUsername(username);
+        Users user = userRepository.findUserByUsername(username.trim());
         if(user == null){
             LOGGER.error(NO_USER_FOUND_BY_USERNAME + username);
             throw new UsernameNotFoundException(NO_USER_FOUND_BY_USERNAME + username);
@@ -103,18 +103,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Users user = new Users();
         user.setUserId(generateUserId());
         String password = generatePassword();
-        user.setFirstName(firstName);
-        user.setLastName(lastname);
-        user.setUsername(username);
-        user.setEmail(email);
+        user.setFirstName(firstName.trim());
+        user.setLastName(lastname.trim());
+        user.setUsername(username.trim());
+        user.setEmail(email.trim());
         user.setJoinDate(new Date());
-        user.setPassword(encodePassword(password));
+        user.setPassword(encodePassword(password.trim()));
         user.setActive(true);
         user.setNotLocked(true);
         user.setRole(ROLE_USER.name());
         user.setAuthorities(ROLE_USER.getAuthorities());
 //        LOGGER.info("New user password is " + "'"+password+"'"); // Todo Remove in production
-        emailService.sendNewPasswordEmail(firstName, password, email);
+        emailService.sendNewPasswordEmail(firstName.trim(), password.trim(), email.trim());
         return userRepository.save(user);
     }
 
@@ -125,12 +125,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Users findByUsername(String username) {
-        return userRepository.findUserByUsername(username);
+        return userRepository.findUserByUsername(username.trim());
     }
 
     @Override
     public Users findByEmail(String email) {
-        return userRepository.findUserByEmail(email);
+        return userRepository.findUserByEmail(email.trim());
     }
 
     @Override
@@ -141,11 +141,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Users user = new Users();
         String password = generatePassword();
         user.setUserId(generateUserId());
-        user.setFirstName(firstName);
-        user.setLastName(lastname);
+        user.setFirstName(firstName.trim());
+        user.setLastName(lastname.trim());
         user.setJoinDate(new Date());
-        user.setUsername(username);
-        user.setEmail(email);
+        user.setUsername(username.trim());
+        user.setEmail(email.trim());
         user.setPassword(encodePassword(password));
         user.setActive(isActive);
         user.setNotLocked(isNonLocked);
@@ -162,10 +162,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                             String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage)
             throws UserNotFoundException, EmailExistException, UsernameExistException, NotAnImageFileException, IOException {
         Users currentUser = validateNewUsernameAndEmail(currentUsername, newUsername, newEmail);
-        currentUser.setFirstName(newFirstName);
-        currentUser.setLastName(newLastname);
-        currentUser.setUsername(newUsername);
-        currentUser.setEmail(newEmail);
+        currentUser.setFirstName(newFirstName.trim());
+        currentUser.setLastName(newLastname.trim());
+        currentUser.setUsername(newUsername.trim());
+        currentUser.setEmail(newEmail.trim());
         currentUser.setActive(isActive);
         currentUser.setNotLocked(isNonLocked);
         currentUser.setRole(getRoleEnumName(role).name());
@@ -253,12 +253,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private Users validateNewUsernameAndEmail(String currentUsername, String newUsername, String newEmail) throws
             UserNotFoundException, UsernameExistException, EmailExistException
     {
-        Users userByNewUsername = findByUsername(newUsername);
-        Users userByNewEmail = findByEmail(newEmail);
+        Users userByNewUsername = findByUsername(newUsername.trim());
+        Users userByNewEmail = findByEmail(newEmail.trim());
 
         // Check if currentUsername is blank
-        if(StringUtils.hasText(currentUsername)){
-            Users currentUser = findByUsername(currentUsername);
+        if(StringUtils.hasText(currentUsername.trim())){
+            Users currentUser = findByUsername(currentUsername.trim());
             if(currentUser == null){
                 throw new UserNotFoundException(NO_USER_FOUND_BY_USERNAME + currentUsername);
             }
