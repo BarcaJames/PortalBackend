@@ -24,8 +24,8 @@ public class ScheduleConfiguration {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Scheduled(cron = "0 32 14 * * *", zone = "GMT-5")
-//    @Scheduled(cron = "0 0 0 * * *", zone = "GMT-5")
+//    @Scheduled(cron = "0 32 14 * * *", zone = "GMT-5")
+    @Scheduled(cron = "0 0 0 * * *", zone = "GMT-5")
     public void cleanUp(){
         userRepository.deleteAll();
 
