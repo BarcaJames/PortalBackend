@@ -11,8 +11,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 
 @Service
 public class LoginAttemptService {
-    // TODO change this value to something like 3 or 5
-    public static final int MAXIMUM_NUMBER_OF_ATTEMPTS = 50;
+    public static final int MAXIMUM_NUMBER_OF_ATTEMPTS = 3;
     public static final int ATTEMPTS_INCREMENT = 1;
     /* String is the username which is the key of the cache and Integer rep the number of time user tried to log in*/
     private LoadingCache<String, Integer> loginAttemptCache;

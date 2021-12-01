@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setNotLocked(true);
         user.setRole(ROLE_USER.name());
         user.setAuthorities(ROLE_USER.getAuthorities());
-        LOGGER.info("New user password is " + "'"+password+"'"); // Todo Remove in production
+//        LOGGER.info("New user password is " + "'"+password+"'"); // Todo Remove in production
         emailService.sendNewPasswordEmail(firstName, password, email);
         return userRepository.save(user);
     }
