@@ -22,7 +22,7 @@ import static com.portal.enumeration.Role.ROLE_SUPER_ADMIN;
 @SpringBootApplication
 
 public class PortalApiApplication {
-    @Value( "${clientUrl}" )
+    @Value("${clientUrl}")
     private String clientUrl;
 
     public static void main(String[] args) {
