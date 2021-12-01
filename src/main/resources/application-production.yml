@@ -1,0 +1,16 @@
+clientUrl: https://portal-client-james.web.app
+
+spring:
+  datasource:
+    url: jdbc:${DATABASE_URL}
+    driverClassName: org.postgresql.Driver
+    maxActive: 10
+    maxIdle: 5
+    minIdle: 2
+    initialSize: 5
+    removeAbandoned: true
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
