@@ -2,6 +2,7 @@ package com.portal;
 
 import com.portal.domain.Users;
 import com.portal.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -20,7 +21,7 @@ import java.util.Date;
 import static com.portal.enumeration.Role.ROLE_SUPER_ADMIN;
 
 @SpringBootApplication
-
+@Slf4j
 public class PortalApiApplication {
     @Value("${clientUrl}")
     private String clientUrl;
@@ -55,7 +56,8 @@ public class PortalApiApplication {
 
     @Bean
     public CorsFilter corsFilter() {
-
+        log.info("LOG CLIENT URL");
+        log.info("---------------------->" + clientUrl + "<-----------------------------");
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
