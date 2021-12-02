@@ -125,12 +125,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Users findByUsername(String username) {
-        return userRepository.findUserByUsername(username.trim());
+        return userRepository.findUserByUsername(username);
     }
 
     @Override
     public Users findByEmail(String email) {
-        return userRepository.findUserByEmail(email.trim());
+        return userRepository.findUserByEmail(email);
     }
 
     @Override
@@ -253,12 +253,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private Users validateNewUsernameAndEmail(String currentUsername, String newUsername, String newEmail) throws
             UserNotFoundException, UsernameExistException, EmailExistException
     {
-        Users userByNewUsername = findByUsername(newUsername.trim());
-        Users userByNewEmail = findByEmail(newEmail.trim());
+        Users userByNewUsername = findByUsername(newUsername);
+        Users userByNewEmail = findByEmail(newEmail);
 
         // Check if currentUsername is blank
-        if(StringUtils.hasText(currentUsername.trim())){
-            Users currentUser = findByUsername(currentUsername.trim());
+        if(StringUtils.hasText(currentUsername)){
+            Users currentUser = findByUsername(currentUsername);
             if(currentUser == null){
                 throw new UserNotFoundException(NO_USER_FOUND_BY_USERNAME + currentUsername);
             }
