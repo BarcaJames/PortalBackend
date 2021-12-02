@@ -2,6 +2,7 @@ package com.portal.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,6 +28,7 @@ public class Users implements Serializable {
     private String password;
     private String email;
     @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
     private byte[] profileImage;
     private Date lastLoginDate;
     private Date lastLoginDateDisplay;
